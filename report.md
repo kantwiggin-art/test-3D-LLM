@@ -21,7 +21,16 @@ Este informe documenta las pruebas, análisis visual, capacidades del sistema de
 
 ---
 
-## 2. Confirmación y Explicación de Capacidades de Visión Computacional (CV)
+## 2. Inspección Visual de Imagen de Prueba Externa (`imagenPrueba.jpg`)
+
+- **Análisis mediante `read_image_file`**:
+  - **Objeto**: Casita/Cabaña infantil de juguete construida en paneles de madera clara entablada.
+  - **Detalles Constructivos**: Techo a dos aguas con vigas/tirantes blancos decorativos en el frontis triangular, puerta verde con panel de listones y picaporte circular, dos ventanas laterales con marcos rectangulares blancos y maceteros/jardineras verdes bajo los alféizares.
+  - **Conclusión de Inspección**: Confirmada la lectura y procesamiento visual correcto de archivos JPG subidos por el usuario a través de las capacidades multimodales del agente.
+
+---
+
+## 3. Confirmación y Explicación de Capacidades de Visión Computacional (CV)
 
 ### ¿Cómo funciona la inspección visual en el agente?
 - El agente dispone de la herramienta nativa **`read_image_file`**, la cual carga archivos de imagen (PNG/JPEG) directamente dentro de su contexto multimodal.
@@ -32,17 +41,16 @@ Este informe documenta las pruebas, análisis visual, capacidades del sistema de
 
 ---
 
-## 3. Estado del Archivo de Prueba (`test_cube.png`)
+## 4. Estado de Configuración de Repositorio y `.gitignore`
 
-- **Estado Actual**: **Confirmado y Funcional**.
-- **Detalles**:
-  - Archivo almacenado en la raíz del proyecto (`test_cube.png`, ~81 KB, 800x800 px).
-  - Fue la primera prueba de renderizado realizada para certificar que el motor de renderizado de Blender 4.0.2 respondía correctamente en modo `--background`.
-  - Verificado visualmente y mediante análisis de rango de píxeles en el pipeline de validación.
+- **Ajuste en `.gitignore`**:
+  - Se removió el patrón restrictivo `test_*.png` del archivo `.gitignore` para permitir el rastreo y versión correcta de imágenes de prueba como `test_cube.png` en los commits del repositorio.
+- **Manejo de Ramas e Integración**:
+  - Archivos rastreados e imágenes de prueba ahora se mantienen en el control de versiones sin riesgo de omisiones accidentales.
 
 ---
 
-## 4. Estado Actual, Desafíos Técnicos y Mejoras de Iluminación
+## 5. Estado Actual, Desafíos Técnicos y Mejoras de Iluminación
 
 ### Estado Actual del Proyecto
 - **Entorno Configurado**: Blender 4.0.2 instalados y probados.
