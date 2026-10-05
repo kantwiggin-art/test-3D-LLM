@@ -94,3 +94,31 @@ Este informe documenta las pruebas, análisis visual, capacidades del sistema de
 - **Proyecto Blender**: `hoverbike/hoverbike.blend`
 - **Modelo 3D Exportado**: `hoverbike/hoverbike.glb`
 - **Capturas de Inspección**: `hoverbike/captures/iteration_1_angle1.png` y `iteration_1_angle2.png`
+
+---
+
+## 7. Modelo 3: Hoverbike V2 Basada en Concept Art (`hoverbike_v2_concept.jpg`)
+
+### A. Análisis del Concept Art e Interpretación 3D
+- **Concept Art de Referencia**: `hoverbike_v2_concept.jpg`
+- **Estilo Artístico**: Estética cel-shaded / low-poly con paleta de tonos desérticos propia de *SABLE* y *Chants of Sennaar*.
+- **Elementos Representados**:
+  1. **Fuselaje Principal**: Cubierta superior aerodinámica en terracota con paneles laterales contrastantes en piedra crema y chasis inferior oscuro en acero pizarra.
+  2. **Nube de Admisión Frontal**: Cono de morro aerodinámico con rejilla de ventilación frontal y núcleo de brillo cian.
+  3. **Cabina y Cúpula Canopy**: Asiento de piloto inclinado con apoyacabezas, cuadro de mandos interactivo con pantalla luminosa cian, manillar de dirección de latón, y domo panorámico transparente teñido en azul cian con ribete de latón.
+  4. **Propulsión Anti-Gravedad**: 4 vainas de propulsión dispuestas en ángulo exterior (2 delanteras, 2 traseras) unidas por soportes de chasis oscuros, rematadas con tapas de latón y emisores circulares cian en la parte inferior.
+  5. **Reactor Trasero y Aletas**: Vivienda de motor cilíndrica con tobera cónica, núcleo emisor cian y aletas estabilizadoras traseras con bordes de latón.
+
+### B. Análisis Visual de Capturas Renders (`hoverbike_v2/captures/`)
+- **`angle_front_quarter.png`**:
+  - Muestra la silueta de tres cuartos frontal del vehículo. Resalta el equilibrio cromático entre el chasis terracota, los páneles laterales crema, la cúpula cian transparente y la iluminación intensa de las 4 vainas anti-gravedad.
+- **`angle_side_profile.png`**:
+  - Demuestra la proporción correcta del cuerpo alargado del hoverbike, la inclinación aerodinámica de la cúpula, la visibilidad del asiento interior y tablero de control, y el ángulo de ataque de las aletas traseras.
+- **`angle_rear_quarter.png` y `angle_top_down.png`**:
+  - Verifican la simetría lateral, colocación de las 4 vainas de sustentación y el motor principal trasero.
+
+### C. Archivos Generados
+- **Script**: `hoverbike_v2/generate_hoverbike_v2.py`
+- **Proyecto Blender**: `hoverbike_v2/hoverbike_v2.blend`
+- **Modelo 3D Exportado**: `hoverbike_v2/hoverbike_v2.glb`
+- **Capturas de Inspección**: `hoverbike_v2/captures/angle_front_quarter.png`, `angle_rear_quarter.png`, `angle_side_profile.png`, y `angle_top_down.png`.
