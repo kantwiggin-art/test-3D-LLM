@@ -68,15 +68,15 @@ def create_stylized_material(name, color=(0.8, 0.7, 0.5, 1.0), metallic=0.1, rou
             bsdf.inputs['Emission Strength'].default_value = emission_strength
     return mat
 
-def configure_render(filepath, resolution=(1080, 1080), engine='BLENDER_EEVEE_NEXT'):
-    """Configure render settings for headless rendering."""
+def configure_render(filepath, resolution=(1080, 1080), engine='CYCLES'):
+    """Configure render settings for headless rendering using Cycles CPU fallback."""
     scene = bpy.context.scene
-    # Set engine safely (fallback if needed)
-    try:
-        scene.render.engine = 'BLENDER_EEVEE'
-    except Exception:
-        scene.render.engine = 'CYCLES'
-        scene.cycles.samples = 64
+
+    # CYCLES on CPU is guaranteed to work headlessly without X11 or GPU context
+    scene.render.engine = 'CYCLES'
+    scene.cycles.device = 'CPU'
+    scene.cycles.samples = 64
+    scene.cycles.use_denoising = False
 
     scene.render.resolution_x = resolution[0]
     scene.render.resolution_y = resolution[1]
