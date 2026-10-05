@@ -67,3 +67,30 @@ Este informe documenta las pruebas, análisis visual, capacidades del sistema de
   1. Incrementar la intensidad de la luz principal (*Key Light*) y luz de relleno (*Fill Light*) en un 25-30%.
   2. Ajustar el color de entorno (*World Background*) para elevar levemente el contraste global entre el medallón de terracota y la luz del glifo cian.
   3. Afinar la exposición de la cámara para maximizar la nitidez de inspección en las capturas de visión computacional.
+
+---
+
+## 6. Modelo 2: Vehículo Reclinado Hoverbike (Capsule Corp x SABLE)
+
+### A. Concepto y Requerimientos de Diseño
+- **Diseño Solicitado**: Hoverbike reclinada (*recumbent*) tipo kayak con cápsula de observación / cúpula transparente de techo circular inspirada en las naves/vehículos de Capsule Corp (Dragon Ball) con acabado estilizado low-poly de *SABLE* / *Chants of Sennaar*.
+- **Elementos Clave Incluidos**:
+  1. **Fuselaje Cápsula**: Chasis alargado estilizado en terracota/arenisca cálida con nariz aerodinámica y popa cónica.
+  2. **Cúpula Techo Circular / Canopy**: Cúpula semiesférica de vidrio cian con aro exterior de oro antiguo.
+  3. **Cabina Reclinada (Kayak Seat)**: Asiento ergonómico en cuero oscuro reclinado hacia atrás con columna/yugo de control metálico.
+  4. **Propulsores Flotantes**: Vainas de empuje laterales con núcleos cilíndricos cian emisivos y tirantes/aletas de sujeción doradas.
+  5. **Anillo Anti-Gravedad Trasero**: Anillo tallado de piedra con núcleo místico cian para propulsión principal posterior.
+  6. **Detalles Mecánicos y Patines**: Patines de aterrizaje inferiores de hierro oscuro y parrilla de admisión frontal dorada.
+
+### B. Análisis Visual de Capturas (`hoverbike/captures/`)
+- **`hoverbike/captures/iteration_1_angle1.png`**:
+  - **Estructura y Silueta**: Muestra con claridad la combinación de la forma de cápsula con la cúpula superior transparente y los propulsores laterales flotantes. Los tonos cálidos de la terracota contrastan fuertemente con la iluminación mística de los núcleos cian.
+  - **Materiales e Iluminación**: Transparencia y tinte del cristal del canopy claramente perceptible; la emisión mística mimetiza la estética de ruinas místicas de *SABLE*.
+- **`hoverbike/captures/iteration_1_angle2.png`**:
+  - **Observación de Cámara**: Registró la orientación del fondo de escena. Se recomienda calibrar la matriz de rotación de cámara en el script para tomas traseras en futuras revisiones.
+
+### C. Archivos Generados
+- **Script**: `hoverbike/generate_hoverbike.py`
+- **Proyecto Blender**: `hoverbike/hoverbike.blend`
+- **Modelo 3D Exportado**: `hoverbike/hoverbike.glb`
+- **Capturas de Inspección**: `hoverbike/captures/iteration_1_angle1.png` y `iteration_1_angle2.png`
