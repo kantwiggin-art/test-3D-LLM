@@ -1,6 +1,34 @@
 # Reporte de Verificación y Análisis - Modelado 3D Headless en Blender y Visualización Interactiva en Babylon.js
 
-Este informe documenta las pruebas, análisis visual, capacidades del sistema de visión, estado de los archivos de prueba, desafíos técnicos encontrados y la integración web interactiva con Babylon.js.
+Este informe documenta las pruebas, análisis visual, capacidades del sistema de visión, estado de los archivos de prueba, desafíos técnicos encontrados y la integración web interactiva con Babylon.js, incluyendo las instrucciones paso a paso para probar el juego en GitHub Codespaces.
+
+---
+
+## ⚡ Guía Rápida de Inicio para GitHub Codespaces
+
+Si estás utilizando **GitHub Codespaces** para probar el proyecto, sigue estos pasos sencillos para lanzar el servidor y probar la escena interactiva en tu navegador:
+
+### 1. Abre la Terminal de Codespaces
+En VS Code (dentro de tu Codespace), abre la consola/terminal integrada (`Ctrl + ~` o `Cmd + ~`).
+
+### 2. Ejecuta el Comando Único de Lanzamiento
+Ingresa el siguiente comando en la terminal:
+```bash
+./start.sh
+```
+
+### 3. Abre el Juego en tu Navegador
+1. Ve a la pestaña **`PORTS` (PUERTOS)** en el panel inferior de VS Code.
+2. Ubica la fila del **Puerto 8080**.
+3. Haz clic en el icono del **Globo Terráqueo 🌐 (Open in Browser / Abrir en el navegador)**.
+4. Si la ruta por defecto te abre la raíz del directorio, navega a la URL:
+   ```
+   https://<tu-codespace-id>-8080.app.github.dev/babylon_scene/index.html
+   ```
+
+### 4. Controles del Juego
+- **WASD** o **Flechas de Dirección**: Acelerar, frenar/reversa y girar la Hoverbike V2.
+- **Mouse / Touch**: Rotación libre de cámara orbital alrededor del vehículo.
 
 ---
 
@@ -33,7 +61,7 @@ Este informe documenta las pruebas, análisis visual, capacidades del sistema de
 ## 3. Confirmación y Explicación de Capacidades de Visión Computacional (CV)
 
 ### ¿Cómo funciona la inspección visual en el agente?
-- El agente dispone de la herramienta nativa **`read_image_file`** y **`read_media_file`**, las cuales cargan archivos de imagen (PNG/JPEG) y video (WEBM) directamente dentro de su contexto multimodal.
+- El agente dispone de las herramientas nativas **`read_image_file`** y **`read_media_file`**, las cuales cargan archivos de imagen (PNG/JPEG) y video (WEBM) directamente dentro de su contexto multimodal.
 - **Ventajas para el ciclo de diseño 3D y escenas interactivas**:
   1. **Análisis Autónomo de Geometría**: Permite evaluar de manera directa la silueta, biseles, simetría y extrusiones del modelo generado mediante código Python.
   2. **Verificación de Materiales e Iluminación**: Inspecciona la emisión de luz, mapas de color, contraste y sombras en tiempo de ejecución.
@@ -46,7 +74,7 @@ Este informe documenta las pruebas, análisis visual, capacidades del sistema de
 - **Ajuste en `.gitignore`**:
   - Se removió el patrón restrictivo `test_*.png` del archivo `.gitignore` para permitir el rastreo y versión correcta de imágenes de prueba como `test_cube.png` en los commits del repositorio.
 - **Manejo de Ramas e Integración**:
-  - Archivos rastreados e imágenes de prueba ahora se mantienen en el control de versiones sin riesgo de omisiones accidental.
+  - Archivos rastreados e imágenes de prueba ahora se mantienen en el control de versiones sin riesgo de omisiones accidentales.
 
 ---
 
