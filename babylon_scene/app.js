@@ -3,6 +3,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const loadingOverlay = document.getElementById('loadingOverlay');
     const speedVal = document.getElementById('speedVal');
     const statusVal = document.getElementById('statusVal');
+    const canopyVal = document.getElementById('canopyVal');
 
     // Initialize Babylon Engine
     const engine = new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true });
@@ -100,19 +101,35 @@ window.addEventListener('DOMContentLoaded', () => {
 
         // Load Hoverbike V2 GLB Asset
         let bikeMesh = null;
+        let canopyNode = null;
+        let isCanopyOpen = false;
+        let canopyProgress = 0; // 0 = fully closed, 1 = fully open
         let bikeRoot = new BABYLON.TransformNode("bikeRoot", scene);
 
-        // Movement State
+        // Global Window Key Handling for reliability
         const inputMap = {};
-        scene.actionManager = new BABYLON.ActionManager(scene);
 
-        scene.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnKeyDownTrigger, (evt) => {
-            inputMap[evt.sourceEvent.key.toLowerCase()] = true;
-        }));
+        function toggleCanopy() {
+            isCanopyOpen = !isCanopyOpen;
+            if (canopyVal) {
+                canopyVal.innerText = isCanopyOpen ? "OPEN (PILOT VISIBLE)" : "CLOSED";
+                canopyVal.style.color = isCanopyOpen ? "#ff00aa" : "#00f3ff";
+            }
+        }
 
-        scene.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnKeyUpTrigger, (evt) => {
-            inputMap[evt.sourceEvent.key.toLowerCase()] = false;
-        }));
+        window.addEventListener('keydown', (evt) => {
+            const key = evt.key.toLowerCase();
+            inputMap[key] = true;
+
+            if (key === 'e') {
+                toggleCanopy();
+            }
+        });
+
+        window.addEventListener('keyup', (evt) => {
+            const key = evt.key.toLowerCase();
+            inputMap[key] = false;
+        });
 
         let speed = 0;
         let rotation = 0;
@@ -124,6 +141,18 @@ window.addEventListener('DOMContentLoaded', () => {
         BABYLON.SceneLoader.ImportMeshAsync("", "../hoverbike_v2/", "hoverbike_v2.glb", scene).then((result) => {
             bikeMesh = result.meshes[0];
             bikeMesh.parent = bikeRoot;
+
+            // Find Canopy Assembly node or mesh across all scene nodes
+            canopyNode = scene.getNodeByName("Canopy_Assembly") ||
+                         result.transformNodes.find(n => n.name.includes("Canopy")) ||
+                         result.meshes.find(m => m.name.includes("Canopy"));
+
+            if (canopyNode) {
+                console.log("Found Canopy node:", canopyNode.name);
+            } else {
+                console.warn("Canopy node not found. All transform nodes:",
+                             result.transformNodes.map(n => n.name));
+            }
 
             // Orient model so front faces forward (-Z direction for follow camera)
             bikeMesh.rotation = new BABYLON.Vector3(0, Math.PI, 0);
@@ -157,6 +186,18 @@ window.addEventListener('DOMContentLoaded', () => {
                 0.0,
                 0.3 + Math.cos(time * 0.5) * 0.1
             );
+
+            // Animate Canopy open/close transition
+            if (canopyNode) {
+                const targetProgress = isCanopyOpen ? 1 : 0;
+                canopyProgress = BABYLON.Scalar.Lerp(canopyProgress, targetProgress, 0.1);
+
+                // Rotate canopy forward/upward (around X pitch angle) and shift forward/up
+                const pitchAngle = canopyProgress * (-0.85); // Pitch forward ~48 degrees
+                canopyNode.rotation = new BABYLON.Vector3(pitchAngle, 0, 0);
+                canopyNode.position.y = canopyProgress * 0.25;
+                canopyNode.position.z = canopyProgress * (-0.35);
+            }
 
             if (bikeRoot) {
                 // Hover bobbing effect

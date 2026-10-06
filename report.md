@@ -28,6 +28,7 @@ Ingresa el siguiente comando en la terminal:
 
 ### 4. Controles del Juego
 - **WASD** o **Flechas de Dirección**: Acelerar, frenar/reversa y girar la Hoverbike V2.
+- **Tecla [E]**: Abrir / Cerrar la carlinga/canopy transparente de la cabina y revelar al piloto.
 - **Mouse / Touch**: Rotación libre de cámara orbital alrededor del vehículo.
 
 ---
@@ -74,7 +75,7 @@ Ingresa el siguiente comando en la terminal:
 - **Ajuste en `.gitignore`**:
   - Se removió el patrón restrictivo `test_*.png` del archivo `.gitignore` para permitir el rastreo y versión correcta de imágenes de prueba como `test_cube.png` en los commits del repositorio.
 - **Manejo de Ramas e Integración**:
-  - Archivos rastreados e imágenes de prueba ahora se mantienen en el control de versiones sin riesgo de omisiones accidentales.
+  - Archivos rastreados e imágenes de prueba ahora se mantienen en el control de versiones sin riesgo de omisiones accidentalmente.
 
 ---
 
@@ -82,7 +83,7 @@ Ingresa el siguiente comando en la terminal:
 
 ### Estado Actual del Proyecto
 - **Entorno Configurado**: Blender 4.0.2 instalados y probados.
-- **Librería de Utilidades**: Script `blender_utils.py` implementado para reiniciar escenas, configurar cámaras, luces, materiales estilizados y renderizado headless.
+- **Librería de Utilidades**: Script `blender_utils.py` implementado para reiniciar escenas, configurar cámaras, luces, materials estilizados y renderizado headless.
 - **Modelos Procedurales Creados**:
   1. `mystic_token/generate_token.py` -> `mystic_token.blend` & `mystic_token.glb`
   2. `hoverbike/generate_hoverbike.py` -> `hoverbike.blend` & `hoverbike.glb`
@@ -107,8 +108,11 @@ Ingresa el siguiente comando en la terminal:
 ## 7. Modelo 3: Hoverbike V2 Basada en Concept Art (`hoverbike_v2_concept.jpg`)
 
 ### A. Análisis e Interpretación 3D
-- **Fuselaje Principal**: Cubierta en terracota, paneles laterales en crema y chasis inferior oscuro.
-- **Propulsión Anti-Gravedad**: 4 vainas de propulsión externas con emisores cian de resplandor místico.
+- **Fuselaje Principal**: Cubierta en terracota, paneles laterales en crema y chasis inferior oscuro con proporciones estilizadas low-poly (escala de casco ajustada a 1.5 en el eje Z).
+- **Propulsión Anti-Gravedad**: 4 soportes laterales al ras de las aletas con discos antigravedad cian de resplandor místico.
+- **Piloto y Cabina Articulada**:
+  - Piloto low-poly (`Pilot_Driver`) con traje beige, casco oscuro y visor cian emisor integrado en el interior de la cabina.
+  - Conjunto de domo articulado (`Canopy_Assembly`) que agrupa el marco de terracota y el cristal curvo transparente.
 - **Archivos Generados**: `hoverbike_v2/generate_hoverbike_v2.py`, `hoverbike_v2/hoverbike_v2.blend`, `hoverbike_v2/hoverbike_v2.glb`, y capturas de ángulo completo en `hoverbike_v2/captures/`.
 
 ---
@@ -118,15 +122,18 @@ Ingresa el siguiente comando en la terminal:
 ### A. Descripción del Mundo Psicodélico
 - **Entorno Visual**: Un mundo desértico/synthwave místico con suelo de rejilla de neón animada, niebla púrpura ambiental, partículas flotantes de polvo estelar y monolitos geométricos flotantes de 7 lados con colores neón emisivos (magenta, cian, oro, violeta).
 - **Carga de Asset GLB**: El modelo `hoverbike_v2.glb` se importa dinámicamente en tiempo de ejecución dentro de la escena.
+- **Mecánica de Carlinga / Cockpit Interactivo**:
+  - Al pulsar la tecla **[E]**, el nodo agrupador `Canopy_Assembly` se desplaza y pivota suavemente hacia adelante/arriba, abriendo la carlinga de cristal y revelando al piloto dentro de la cabina.
 - **Controles y Física de Movimiento**:
   - Teclas de control: **WASD** / Flechas de dirección.
-  - Dinámica: Aceleración progresiva, fricción desértica, giro suave, efecto de flotación (*hover bobbing*), y bank/inclinación al girar.
-  - Interfaz HUD: Muestra la velocidad instantánea y el estado del vehículo (*HOVERING* / *CRUISING*).
+  - Dinámica: Aceleración progresiva, fricción desértica, giro suave, efecto de flotación (*hover bobbing*), y inclinación al girar.
+  - Interfaz HUD: Muestra la velocidad instantánea, estado del vehículo (*HOVERING* / *CRUISING*) y estado de la carlinga (*Cockpit Canopy: CLOSED / OPEN*).
 
 ### B. Ciclo de Renderizado y Análisis Visual con Playwright
 - **Prueba Automatizada (`verify_babylon.py`)**:
   - Navega a `http://localhost:8080/babylon_scene/index.html`.
+  - Prueba la apertura e interacción de la carlinga con la tecla **[E]**.
   - Simula navegación real del vehículo (arranque hacia adelante, aceleración y giro a la derecha).
   - Captura video WebM de la sesión (`verification/videos/`) y capturas de pantalla (`verification/screenshots/` y `babylon_scene/captures/`).
 - **Verificación Multimodal (`read_media_file`)**:
-  - Se confirmó mediante inspección visual la integración del modelo GLB dentro del canvas WebGL, el comportamiento adecuado de las luces/sombras, los elementos de la interfaz HUD y el renderizado fluido en el navegador.
+  - Se confirmó mediante inspección visual la apertura limpia del domo transparente, la presencia del piloto sentado en la cabina, la integración del modelo GLB dentro del canvas WebGL y el renderizado fluido en el navegador.
