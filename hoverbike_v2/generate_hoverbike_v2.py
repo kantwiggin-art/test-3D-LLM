@@ -1,34 +1,48 @@
 import sys
 import os
 import math
+import subprocess
 import bpy
 
-# Add project root directory to path to import blender_utils
+# Add current and project root directory to path
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 import blender_utils
 
+def ensure_textures():
+    tex_dir = os.path.abspath("hoverbike_v2/textures")
+    terracotta_path = os.path.join(tex_dir, "terracotta_hull.png")
+    if not os.path.exists(terracotta_path):
+        gen_script = os.path.abspath("hoverbike_v2/generate_textures.py")
+        print("Executing texture generator in system python...")
+        subprocess.run(["python3", gen_script], check=True)
+
 def create_hoverbike_v2():
+    ensure_textures()
+    tex_dir = os.path.abspath("hoverbike_v2/textures")
+
     # Reset scene
     blender_utils.reset_scene()
 
-    # Materials
-    mat_hull_primary = blender_utils.create_stylized_material(
+    # Materials with Image Texture Maps
+    mat_hull_primary = blender_utils.create_image_texture_material(
         "HullPrimary_Terracotta",
-        color=(0.85, 0.38, 0.22, 1.0), # SABLE style terracotta orange
+        image_path=os.path.join(tex_dir, "terracotta_hull.png"),
         metallic=0.15,
         roughness=0.5
     )
 
-    mat_hull_secondary = blender_utils.create_stylized_material(
+    mat_hull_secondary = blender_utils.create_image_texture_material(
         "HullSecondary_Cream",
-        color=(0.92, 0.88, 0.80, 1.0), # Desert stone cream
+        image_path=os.path.join(tex_dir, "cream_panel.png"),
         metallic=0.05,
         roughness=0.6
     )
 
-    mat_dark_chassis = blender_utils.create_stylized_material(
+    mat_dark_chassis = blender_utils.create_image_texture_material(
         "DarkChassis_Steel",
-        color=(0.18, 0.20, 0.23, 1.0), # Dark slate gray steel
+        image_path=os.path.join(tex_dir, "chassis_dark.png"),
         metallic=0.6,
         roughness=0.4
     )
@@ -54,9 +68,9 @@ def create_hoverbike_v2():
         roughness=0.1
     )
 
-    mat_pilot_suit = blender_utils.create_stylized_material(
+    mat_pilot_suit = blender_utils.create_image_texture_material(
         "Pilot_Suit",
-        color=(0.22, 0.25, 0.30, 1.0), # Slate flight suit
+        image_path=os.path.join(tex_dir, "pilot_suit.png"),
         metallic=0.1,
         roughness=0.7
     )
@@ -65,10 +79,12 @@ def create_hoverbike_v2():
     hoverbike_coll = bpy.data.collections.new("HoverbikeV2")
     bpy.context.scene.collection.children.link(hoverbike_coll)
 
-    # Helper function to assign collection & material
-    def setup_obj(obj, name, material, parent=None, smooth=True):
+    # Helper function to assign collection, UV unwrap, & material
+    def setup_obj(obj, name, material, parent=None, smooth=True, unwrap=True):
         obj.name = name
         hoverbike_coll.objects.link(obj)
+        if unwrap and obj.type == 'MESH':
+            blender_utils.smart_uv_unwrap(obj)
         if material:
             obj.data.materials.append(material)
         if parent:
@@ -108,7 +124,7 @@ def create_hoverbike_v2():
     bpy.ops.mesh.primitive_circle_add(radius=0.18, fill_type='NGON', location=(0, 1.42, 0.72))
     intake_glow = bpy.context.active_object
     intake_glow.rotation_euler = (math.radians(90), 0, 0)
-    setup_obj(intake_glow, "Intake_GlowCore", mat_glow_cyan, parent=intake)
+    setup_obj(intake_glow, "Intake_GlowCore", mat_glow_cyan, parent=intake, unwrap=False)
 
     # Rounded Side Shell Panels (Cream Stone contrast panels flush on flanks)
     for side, sign in [("Left", -1), ("Right", 1)]:
@@ -148,7 +164,7 @@ def create_hoverbike_v2():
     screen = bpy.context.active_object
     screen.scale = (0.28, 0.12, 1.0)
     screen.rotation_euler = (math.radians(-30), 0, 0)
-    setup_obj(screen, "Dash_Screen_Glow", mat_glow_cyan, parent=dash)
+    setup_obj(screen, "Dash_Screen_Glow", mat_glow_cyan, parent=dash, unwrap=False)
 
     # PILOT DRIVER MODEL (Seated inside cockpit)
     pilot_root = bpy.data.objects.new("Pilot_Driver", None)
@@ -172,7 +188,7 @@ def create_hoverbike_v2():
     visor = bpy.context.active_object
     visor.rotation_euler = (math.radians(80), 0, 0)
     visor.scale = (0.9, 0.4, 0.9)
-    setup_obj(visor, "Pilot_Visor", mat_glow_cyan, parent=head)
+    setup_obj(visor, "Pilot_Visor", mat_glow_cyan, parent=head, unwrap=False)
 
     # Pilot Arms holding handlebar
     for side, sign in [("Left", -1), ("Right", 1)]:
@@ -182,7 +198,6 @@ def create_hoverbike_v2():
         setup_obj(arm, f"Pilot_Arm_{side}", mat_pilot_suit, parent=pilot_root)
 
     # 3. ANIMATED CANOPY ASSEMBLY (Pivoted for forward opening)
-    # Empty assembly pivot for sliding/opening forward
     canopy_assembly = bpy.data.objects.new("Canopy_Assembly", None)
     hoverbike_coll.objects.link(canopy_assembly)
     canopy_assembly.parent = chassis
@@ -193,7 +208,7 @@ def create_hoverbike_v2():
     canopy = bpy.context.active_object
     canopy.scale = (0.82, 1.25, 0.68)
     canopy.rotation_euler = (math.radians(10), 0, 0)
-    setup_obj(canopy, "Canopy_GlassDome", mat_canopy_glass, parent=canopy_assembly)
+    setup_obj(canopy, "Canopy_GlassDome", mat_canopy_glass, parent=canopy_assembly, unwrap=False)
 
     # Canopy Brass Frame Trim
     bpy.ops.mesh.primitive_torus_add(major_radius=0.46, minor_radius=0.02, major_segments=24, minor_segments=8, location=(0, -0.05, 0.12))
@@ -216,10 +231,9 @@ def create_hoverbike_v2():
     bpy.ops.mesh.primitive_cylinder_add(radius=0.22, depth=0.1, vertices=16, location=(0, -1.35, 0.65))
     thruster_glow = bpy.context.active_object
     thruster_glow.rotation_euler = (math.radians(90), 0, 0)
-    setup_obj(thruster_glow, "Thruster_GlowCore", mat_glow_cyan, parent=thruster_nozzle)
+    setup_obj(thruster_glow, "Thruster_GlowCore", mat_glow_cyan, parent=thruster_nozzle, unwrap=False)
 
     # 5. Anti-Gravity Thruster Pods (4 Integrated & Connected Outriggers)
-    # Compact & flush coordinates to eliminate floating gaps!
     pod_positions = [
         ("Front_Left", -0.68, 0.50, 0.42, -20),
         ("Front_Right", 0.68, 0.50, 0.42, 20),
@@ -230,7 +244,6 @@ def create_hoverbike_v2():
     for name_suffix, x, y, z, roll in pod_positions:
         sign = -1 if x < 0 else 1
 
-        # Solid Wing Strut connecting chassis flush to pod
         strut_center_x = sign * (0.35 + abs(x)) / 2.0
         strut_length = abs(x) - 0.30
 
@@ -256,7 +269,7 @@ def create_hoverbike_v2():
         bpy.ops.mesh.primitive_cylinder_add(radius=0.20, depth=0.06, vertices=16, location=(x, y, z - 0.24))
         emitter = bpy.context.active_object
         emitter.rotation_euler = (0, math.radians(roll * 0.3), 0)
-        setup_obj(emitter, f"Pod_EmitterGlow_{name_suffix}", mat_glow_cyan, parent=pod)
+        setup_obj(emitter, f"Pod_EmitterGlow_{name_suffix}", mat_glow_cyan, parent=pod, unwrap=False)
 
         # Outer Emitter Ring
         bpy.ops.mesh.primitive_torus_add(major_radius=0.22, minor_radius=0.02, major_segments=16, minor_segments=8, location=(x, y, z - 0.24))
@@ -281,7 +294,7 @@ def create_hoverbike_v2():
     return chassis
 
 def main():
-    print("Generating Revised Hoverbike V2 Model...")
+    print("Generating Textured Hoverbike V2 Model...")
     create_hoverbike_v2()
 
     # Save Blender file

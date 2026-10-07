@@ -68,6 +68,44 @@ def create_stylized_material(name, color=(0.8, 0.7, 0.5, 1.0), metallic=0.1, rou
             bsdf.inputs['Emission Strength'].default_value = emission_strength
     return mat
 
+def create_image_texture_material(name, image_path, metallic=0.1, roughness=0.6, emission_color=None, emission_strength=0.0):
+    """Create a Principled BSDF material with an image texture map."""
+    mat = bpy.data.materials.new(name=name)
+    mat.use_nodes = True
+    nodes = mat.node_tree.nodes
+    links = mat.node_tree.links
+
+    bsdf = nodes.get('Principled BSDF')
+
+    abs_image_path = os.path.abspath(image_path)
+    if os.path.exists(abs_image_path):
+        img = bpy.data.images.load(abs_image_path)
+        tex_node = nodes.new(type='ShaderNodeTexImage')
+        tex_node.image = img
+        links.new(tex_node.outputs['Color'], bsdf.inputs['Base Color'])
+    else:
+        print(f"Warning: image_path {abs_image_path} not found")
+
+    if bsdf:
+        bsdf.inputs['Metallic'].default_value = metallic
+        bsdf.inputs['Roughness'].default_value = roughness
+        if emission_color and 'Emission Color' in bsdf.inputs:
+            bsdf.inputs['Emission Color'].default_value = emission_color
+            bsdf.inputs['Emission Strength'].default_value = emission_strength
+
+    return mat
+
+def smart_uv_unwrap(obj):
+    """Smart UV project unwrap for a mesh object."""
+    if obj.type != 'MESH':
+        return
+    bpy.context.view_layer.objects.active = obj
+    obj.select_set(True)
+    bpy.ops.object.mode_set(mode='EDIT')
+    bpy.ops.mesh.select_all(action='SELECT')
+    bpy.ops.uv.smart_project(angle_limit=66.0, island_margin=0.02)
+    bpy.ops.object.mode_set(mode='OBJECT')
+
 def configure_render(filepath, resolution=(1080, 1080), engine='CYCLES'):
     """Configure render settings for headless rendering using Cycles CPU fallback."""
     scene = bpy.context.scene
