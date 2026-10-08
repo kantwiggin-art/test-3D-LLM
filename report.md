@@ -1,6 +1,6 @@
-# Reporte de Verificación y Análisis - Modelado 3D Headless en Blender y Visualización Interactiva en Babylon.js
+# Reporte de Verificación y Análisis - Modelado 3D Headless en Blender, Texturizado Pixel Art 2D y Visualización Interactiva en Babylon.js
 
-Este informe documenta las pruebas, análisis visual, capacidades del sistema de visión, estado de los archivos de prueba, desafíos técnicos encontrados, la integración de texturas 2D personalizadas mediante Pillow y desempaquetado UV, y la integración web interactiva con Babylon.js, incluyendo las instrucciones paso a paso para probar el juego en GitHub Codespaces.
+Este informe documenta las pruebas, análisis visual, capacidades del sistema de visión, estado de los archivos de prueba, desafíos técnicos encontrados, la integración de texturas 2D personalizadas mediante Pillow y desempaquetado UV, la generación de un Sprite Atlas Pixel Art Isométrico 2D por código, y la integración web interactiva con Babylon.js, incluyendo las instrucciones paso a paso para probar el juego en GitHub Codespaces.
 
 ---
 
@@ -30,6 +30,30 @@ Ingresa el siguiente comando en la terminal:
 - **WASD** o **Flechas de Dirección**: Acelerar, frenar/reversa y girar la Hoverbike V2.
 - **Tecla [E]**: Abrir / Cerrar la carlinga/canopy transparente de la cabina y revelar al piloto.
 - **Mouse / Touch**: Rotación libre de cámara orbital alrededor del vehículo.
+
+---
+
+## 🎨 10. Diseño de Sprite Atlas 2D Isométrico en Pixel Art (`generate_pixelart_atlas.py`)
+
+Para explorar el concepto del Hoverbike en un juego isométrico 2D (al estilo clásico RTS de *StarCraft 1*), se diseñó un generador procedimental en Python (`generate_pixelart_atlas.py`) utilizando la librería `Pillow` sin depender de renderizado 3D por capturas.
+
+### A. Paleta de Colores y Restricciones Estilísticas
+- **Paleta Reducida**: Terracota (`#D96B43`), Crema (`#F0E2CD`), Chasis Oscuro (`#383238`), Cian Neón Emisivo (`#00F5D4`), Vidrio Celeste (`#70D6FF`), Traje de Piloto (`#B4A08C`) y Sombra de Suelo Dithered.
+- **Grilla Isométrica 2:1**: Proyección isométrica estándar de videojuegos 2D a resolución pixel-exacta de 64x64 por fotograma.
+- **Técnicas Pixel Art Utilizadas**:
+  - Delineado oscuro exterior (*dark outline*) de 1 píxel.
+  - Sombreado por tramado o matizado (*Dithering*) del 50% en patrón de ajedrez para las crestas del fuselaje y la sombra proyectada en el suelo.
+  - Efectos de resplandor atómico (*glow aura*) alrededor de los motores antigravedad de cian brillante.
+
+### B. Ángulos Incluidos en el Sprite Atlas (`pixelart/hoverbike_isometric_atlas.png`)
+1. **ISO 0° Front-Right (Sur-Este)**: Vista frontal con el morro apuntando hacia abajo-derecha, calcomanía de estrella de 7 puntas visible, piloto dentro de la cabina de cristal y alerón crema desplegado.
+2. **ISO 90° Rear-Right (Norte-Este)**: Vista trasera derecha destacando los dos propulsores circulares traseros con resplandor cian.
+3. **ISO 180° Rear-Left (Norte-Oeste)**: Vista trasera izquierda con la silueta ahusada del chasis y el alerón izquierdo.
+4. **ISO 270° Front-Left (Sur-Oeste)**: Vista frontal izquierda mostrando la simetría del vehículo y el panel superior en color crema.
+
+### C. Inspección Visual y Verificación de Legibilidad Pixel Art
+- Se generaron versiones de inspección a escala 4x (`pixelart/hoverbike_isometric_atlas_4x.png`) que fueron analizadas directamente con la capacidad multimodal `read_image_file`.
+- **Resultado del Análisis Visual**: Los contornos son limpios, los motores antigravedad de neón cian destacan sobre la silueta de terracota, la sombra del suelo da la sensación de flotación adecuada, y la rotación isométrica entre ángulos es fluida y coherente para un motor 2D.
 
 ---
 
@@ -101,11 +125,12 @@ Para lograr la estética de acuarela/cómic estilizada inspirada en *SABLE* y *C
 ### Estado Actual del Proyecto
 - **Entorno Configurado**: Blender 4.0.2 instalado y probado.
 - **Librería de Utilidades**: Script `blender_utils.py` implementado para reiniciar escenas, configurar cámaras, luces, materiales estilizados, desempaquetado UV y renderizado headless.
-- **Modelos Procedurales Creados**:
+- **Modelos y Sprites Creados**:
   1. `mystic_token/generate_token.py` -> `mystic_token.blend` & `mystic_token.glb`
   2. `hoverbike/generate_hoverbike.py` -> `hoverbike.blend` & `hoverbike.glb`
   3. `hoverbike_v2/generate_hoverbike_v2.py` -> `hoverbike_v2.blend` & `hoverbike_v2.glb` (Texturizado UV completo)
-  4. `babylon_scene/index.html` & `app.js` -> Aplicación 3D Web interactiva con Babylon.js.
+  4. `generate_pixelart_atlas.py` -> `pixelart/hoverbike_isometric_atlas.png` (Sprite Atlas Pixel Art 2D)
+  5. `babylon_scene/index.html` & `app.js` -> Aplicación 3D Web interactiva con Babylon.js.
 
 ### Desafíos Técnicos Identificados y Resueltos
 1. **Fallo de Contexto EGL / OpenGL en EEVEE (Blender)**: Solucionado configurando el pipeline con el motor **Cycles** en modo **CPU**.
